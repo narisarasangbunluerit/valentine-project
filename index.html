@@ -15,6 +15,7 @@
         justify-content: center;
         align-items: center;
         margin: 0;
+        overflow: hidden; /* Prevent scrolling when hearts are floating */
       }
       h2 {
         color: #d63384;
@@ -58,6 +59,57 @@
         width: 250px;
         border-radius: 15px;
       }
+      .heart {
+        position: absolute;
+        font-size: 40px;
+        color: red;
+        animation: moveHeart 2s ease-out forwards;
+        opacity: 0;
+      }
+      @keyframes moveHeart {
+        0% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+        50% {
+          opacity: 1;
+          transform: translateY(-300px) scale(1.2);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-500px) scale(1.5);
+        }
+      }
+      .message {
+        font-size: 30px;
+        font-weight: bold;
+        color: #ff4b8b;
+        animation: showMessage 1s ease-out;
+        display: none;
+      }
+      @keyframes showMessage {
+        0% {
+          opacity: 0;
+          transform: translateY(50px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .restart-button {
+        margin-top: 30px;
+        background-color: #ff69b4;
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+        border-radius: 20px;
+      }
+      .restart-button:hover {
+        background-color: #ff4d94;
+      }
     </style>
   </head>
   <body>
@@ -66,6 +118,7 @@
     <!-- Cute Valentine GIF -->
     <div class="gif-container">
       <img
+        id="valentineGif"
         src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif"
         alt="Cute Valentine GIF"
       />
@@ -78,30 +131,29 @@
 
     <script>
       let messages = [
-        "Are you sure? 😢",
-        "Think again! 🥺",
-        "Don't break my heart 💔",
-        "Please say Yes! 💞",
-        "I won't take 'No' for an answer! 😡",
-        "C'mon, don't leave me hanging! 😩",
-        "Are you ready for a love story? 📖💘",
-        "I’ve got chocolate and roses waiting! 🌹🍫",
-        "You won’t regret it! 💖",
-        "I promise I’m awesome! 😎",
-        "Your heart deserves a good match! 💘",
+        "Hey~ Are you sure?? 🥲",
+        "If you say no, i will be really sad☹️💟 ",
+        "Pookie please... 💖",
+        "Be my Valentine forever! 😘",
+        "You’re my sunshine! 🌞💖",
+        "Just think about it! 💓",
+        "Forever and always, my love! 💕",
+        "You're the one for me! ❤️",
+        "My heart is yours! 💘",
+        "You light up my world! 💡💖",
       ];
-      let messagesIndex = 0;
 
       function handleNoClick() {
         const noButton = document.querySelector(".no-button");
         const yesButton = document.querySelector(".yes-button");
 
         if (noButton && yesButton) {
-          // เปลี่ยนข้อความของปุ่ม No
-          messagesIndex = Math.floor(Math.random() * messages.length);
-          noButton.textContent = messages[messagesIndex];
+          // Change the No button's message
+          const randomMessage =
+            messages[Math.floor(Math.random() * messages.length)];
+          noButton.textContent = randomMessage;
 
-          // เพิ่มขนาดของปุ่ม Yes ขึ้น 1.5 เท่าทุกครั้งที่กด No
+          // Increase the size of the Yes button by 1.5x each time
           const currentSize = parseFloat(
             window.getComputedStyle(yesButton).fontSize
           );
@@ -110,8 +162,47 @@
       }
 
       function handleYesClick() {
-        alert("Yay! You said Yes! 💘🎉"); // แสดงข้อความดีใจ
-        window.location.href = "valentine_yes.html"; // เปลี่ยนหน้า
+        // Change the GIF image to a new one after Yes click
+        const gifImage = document.getElementById("valentineGif");
+        gifImage.src =
+          "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExd21rMWVvM2txYWprdmZreDFwOTcwZmJqenh1ZDVxeWh1NjhwazZ4ciZlcD12MV9naWZzX3NlYXJjaCZjdD1n/X9Y9qYPUp1VMQ/giphy.gif"; // Replace with a new GIF URL
+
+        // Create heart emojis floating
+        for (let i = 0; i < 10; i++) {
+          const heart = document.createElement("div");
+          heart.classList.add("heart");
+          heart.style.left = `${Math.random() * 100}vw`; // Random horizontal position
+          heart.style.animationDelay = `${Math.random() * 1}s`; // Random animation delay
+          heart.textContent = "💖";
+          document.body.appendChild(heart);
+        }
+
+        // Remove the title
+        document.querySelector("h2").style.display = "none";
+
+        // Display the love message
+        const message = document.createElement("div");
+        message.classList.add("message");
+        message.textContent = "I knew you would say yes! 🐈💘";
+        document.body.appendChild(message);
+
+        // Start the animation for the message
+        setTimeout(() => {
+          message.style.display = "block";
+        }, 500);
+
+        // Hide the Yes and No buttons
+        document.querySelector(".yes-button").style.display = "none";
+        document.querySelector(".no-button").style.display = "none";
+
+        // Show the restart button
+        const restartButton = document.createElement("button");
+        restartButton.textContent = "Play Again";
+        restartButton.classList.add("restart-button");
+        restartButton.onclick = () => {
+          window.location.reload(); // Reload the page to start over
+        };
+        document.body.appendChild(restartButton);
       }
     </script>
   </body>
